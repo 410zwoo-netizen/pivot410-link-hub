@@ -697,6 +697,120 @@ body::after {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================
+   GALLERY · 실제 공간 + 수업 현장 (신뢰 요소)
+   가로 스크롤 갤러리 2개. 기존 카드 톤 유지.
+   ========================================================== */
+.gallery-section { margin: 30px 0 8px; }
+.gallery-block { margin-bottom: 26px; }
+.gallery-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 4px 14px;
+}
+.gallery-label .text {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--silver);
+  white-space: nowrap;
+}
+.gallery-label .sub {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.gallery-label .dash { flex: 1; height: 1px; background: var(--line); }
+
+/* 옆으로 미는 스크롤 트랙 */
+.gallery-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 4px 12px;
+  scrollbar-width: none; /* Firefox */
+}
+.gallery-track::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+.gallery-item {
+  position: relative;
+  flex: 0 0 auto;
+  height: 190px;          /* 모든 사진 동일 높이 (16:9 통일) */
+  aspect-ratio: 16 / 9;   /* 너비 자동 = 높이×16/9 */
+  border-radius: 14px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+/* 사진 위 캡션 (하단 그라데이션 + 글씨) */
+.gallery-item .cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 16px 12px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: linear-gradient(to top, rgba(8,11,16,0.82), rgba(8,11,16,0));
+}
+/* 맨 끝 "더보기" 안내 카드 */
+.gallery-toggle {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--silver);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 5px 13px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.gallery-toggle:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.gallery-toggle[aria-expanded="true"] { background: var(--silver); color: var(--ink); border-color: var(--silver); }
+
+/* 전체보기(그리드) 모드 — 가로 스크롤 대신 그리드로 펼침 */
+.gallery-track.is-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  overflow: visible;
+}
+.gallery-track.is-grid .gallery-item {
+  width: 100%;
+  height: auto;
+}
+.gallery-track.is-grid .gallery-more { display: none; }
+@media (min-width: 700px) {
+  .gallery-track.is-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.gallery-more {
+  flex: 0 0 auto;
+  align-self: center;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  padding: 0 14px 0 6px;
+  white-space: nowrap;
+}
+@media (max-width: 380px) {
+  .gallery-item { height: 165px; }
+}
 </style>
 </head>
 <body>
@@ -893,6 +1007,73 @@ body::after {
     </div>
   </a>
 
+  <!-- GALLERY · 실제 공간 + 수업 현장 -->
+  <section class="gallery-section" aria-label="스튜디오 공간과 수업 현장">
+
+    <!-- 공간 -->
+    <div class="gallery-block">
+      <div class="gallery-label">
+        <span class="text">OUR SPACE</span>
+        <span class="sub">외대점 공간</span>
+        <span class="dash"></span>
+      </div>
+      <div class="gallery-track">
+        <div class="gallery-item">
+          <img src="images/fac-1-exterior.webp" alt="PIVOT410 STUDIO 외대점 건물 외관" loading="lazy" width="1280" height="720">
+          <span class="cap">외대점 건물 — 이문로</span>
+        </div>
+        <div class="gallery-item">
+          <img src="images/fac-2-mainhall.webp" alt="외대점 메인홀 연습실" loading="lazy" width="1280" height="720">
+          <span class="cap">메인홀</span>
+        </div>
+        <div class="gallery-item">
+          <img src="images/fac-3-subhall.webp" alt="외대점 서브홀 연습실" loading="lazy" width="1280" height="720">
+          <span class="cap">서브홀</span>
+        </div>
+        <div class="gallery-item">
+          <img src="images/fac-4-hall.webp" alt="외대점 내부 복도와 연습실 입구" loading="lazy" width="1280" height="720">
+          <span class="cap">복도 · 룸</span>
+        </div>
+        <span class="gallery-more">← 밀어서 더 보기</span>
+      </div>
+    </div>
+
+    <!-- 현장 -->
+    <div class="gallery-block" id="pivot-gallery">
+      <div class="gallery-label">
+        <span class="text">PIVOT GALLERY</span>
+        <span class="sub">피봇 미리보기</span>
+        <span class="dash"></span>
+        <button class="gallery-toggle" type="button" aria-expanded="false">전체보기</button>
+      </div>
+      <div class="gallery-track">
+        <div class="gallery-item"><img src="images/cls-1.webp" alt="외대점 그룹 댄스 수업" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/cls-2.webp" alt="외대점 안무 수업" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/cls-4.webp" alt="외대점 그룹 수업" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-m1.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-f1.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-m2.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-f2.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-g1.webp" alt="외대점 수강생 단체" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-f3.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-m3.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-f4.webp" alt="외대점 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/cls-5-group.webp" alt="외대점 수강생 단체" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/mem-g2.webp" alt="외대점 수강생 단체" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-f1.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-m1.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-f2.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-g1.webp" alt="외대점 키즈 수강생 단체" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-f3.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-m2.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/kid-f4.webp" alt="외대점 키즈 수강생" loading="lazy" width="1280" height="720"></div>
+        <div class="gallery-item"><img src="images/cls-6-group.webp" alt="외대점 수강생 단체" loading="lazy" width="1280" height="720"></div>
+        <span class="gallery-more">← 밀어서 더 보기</span>
+      </div>
+    </div>
+
+  </section>
+
   <!-- CONTACT -->
   <section class="contact-section">
     <div class="contact-label">
@@ -1055,5 +1236,20 @@ document.querySelectorAll('[data-track]').forEach(el => {
 });
 </script>
 
+<script>
+(function(){
+  var g = document.getElementById('pivot-gallery');
+  if(!g) return;
+  var btn = g.querySelector('.gallery-toggle');
+  var track = g.querySelector('.gallery-track');
+  if(!btn || !track) return;
+  btn.addEventListener('click', function(){
+    var open = track.classList.toggle('is-grid');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? '접기' : '전체보기';
+    if(!open){ track.scrollLeft = 0; }
+  });
+})();
+</script>
 </body>
 </html>
